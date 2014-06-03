@@ -5,9 +5,7 @@ Simulador de SO
 >
 >
 > Universidad Nacional de Quilmes.
-> Materia:
--------
-Sistemas Operativos
-> Año: 
----
-2014
+>
+> Materia: Sistemas Operativos
+>
+> Año: 2014
