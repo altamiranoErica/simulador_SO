@@ -65,7 +65,7 @@ class Priority:
             self.matrix[-i] = self.matrix[-(i-1)]
     
     def isEmpty(self):
-		return self.readyQueue.isEmpty()
+        return self.readyQueue.isEmpty()
 
 class RoundRobin:
     ''' Para aplicar RoundRobin con prioridad solo se debe pasar por
@@ -82,22 +82,22 @@ class RoundRobin:
     def nextPCB(self):
         return self.queue.nextPCB()
     
-	def isEmpty(self):
-		return self.queue.isEmpty()
+    def isEmpty(self):
+        return self.queue.isEmpty()
     
 class Quantum:
 	
-	def __init__(self, quantum, clock):
-		self.quantum = quantum
-		self.countQ = quantum
-		self.clock.addObserver(self)
+    def __init__(self, quantum, clock):
+        self.quantum = quantum
+        self.countQ = quantum
+        self.clock.addObserver(self)
     
-	def notify(self):
-		if self.countQ > 1:
-			self.countQ -= 1
-		else:
-			self.restart()
-			# lanzar interrupcion *timeOut*
+    def notify(self):
+        if self.countQ > 0:
+            self.countQ -= 1
+        else:
+            self.restart()
+            # lanzar interrupcion *timeOut*
     
-	def restart(self):
-		self.countQ = self.quantum
+    def restart(self):
+        self.countQ = self.quantum
