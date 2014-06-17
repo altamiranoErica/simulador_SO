@@ -17,22 +17,12 @@ class InterruptHandler:
     def interrupt(self, interruption):
         command = self.configuration[interruption]
         # cambiar a modo Kernel
-        command()
+        command.execute(this)
         # cambiar a modo Usuario
         
     def defaultConfiguration(self):
-        self.addConfiguration(InterruptHandler.NEW, self.newInterruption)
-        self.addConfiguration(InterruptHandler.TIME_OUT, self.timeOutInterruption)
-        self.addConfiguration(InterruptHandler.WAIT_IO, self.waitIOInterruption)
-        self.addConfiguration(InterruptHandler.END_IO, self.endIOInterruption)
-        self.addConfiguration(InterruptHandler.KILL, self.killInterruption)
-
-    def newInterruption(self):
-        
-    def timeOutInterruption(self):
-        
-    def waitIOInterruption(self):
-        
-    def endIOInterruption(self):
-        
-    def killInterruption(self):
+        self.addConfiguration(InterruptHandler.NEW, NewCommand())
+        self.addConfiguration(InterruptHandler.TIME_OUT, TimeOutCommand())
+        self.addConfiguration(InterruptHandler.WAIT_IO, WaitIOCommand())
+        self.addConfiguration(InterruptHandler.END_IO, EndIOCommand())
+        self.addConfiguration(InterruptHandler.KILL, KillCommand())
