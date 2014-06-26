@@ -16,9 +16,7 @@ class InterruptHandler:
         
     def interrupt(self, interruption):
         command = self.configuration[interruption]
-        # cambiar a modo Kernel
         command.execute(this)
-        # cambiar a modo Usuario
         
     def defaultConfiguration(self):
         self.addConfiguration(InterruptHandler.NEW, NewCommand())
