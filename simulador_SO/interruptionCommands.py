@@ -18,14 +18,17 @@ class InterruptCommand:
             self.rQueue.addPCB(pcb)
             
     def addNewPCBToCPU(self):
-        if ! self.rQueue.isEmpty()
+        if not self.rQueue.isEmpty():
             self.cpu.add(iHandler.queue.nextPCB())
 
     
 class NewCommand(InterruptCommand):
     
+    def __init__(self, pName):
+        self.programName = pName
+    
     def executeCommand(self, iHandler):
-        program = iHandler.disk.read('''nombre del programa nuevo''')
+        program = iHandler.disk.read(self.programName)
         mAddress = iHandler.memory.load(program)
         newPcb = PCB(id(program), mAddress, program.priority)
         self.addPCBtoReadyQueue(newPcb)

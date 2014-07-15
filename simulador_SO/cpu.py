@@ -6,7 +6,7 @@ class CPU:
     def addPcb(self, pcb):
         self.pcb = pcb    
     
-    def execute(self, instruction):
+    #def execute(self, instruction):
         
     def fetch(self):
         memoryAddress = self.pcb.memoryAddress + self.pcb.pc

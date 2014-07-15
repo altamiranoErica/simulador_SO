@@ -31,9 +31,9 @@ class Priority:
         self.matrix = [[] for i in range(self.topPriority)]
         for i in self.readyQueue:
             self.matrix[-i.priority].append(i)
-                ''' usa indices negativos para evitar el tener que restar
-                uno. En adelante SIEMPRE se usa *-i* para acceder a los
-                elementos de prioridad *i*. '''
+            ''' usa indices negativos para evitar el tener que restar
+            uno. En adelante SIEMPRE se usa *-i* para acceder a los
+            elementos de prioridad *i*. '''
         
     def addPCB(self, pcb):
         self.matrix[-pcb.priority].append(pcb)
@@ -61,7 +61,7 @@ class Priority:
     
     def rotateList(self, maxIndex):
         # Mueve cada lista a un nivel superior en la matriz.
-        for i in (r = [maxIndex - x for x in range(maxIndex - 1)]):
+        for i in ([maxIndex - x for x in range(maxIndex - 1)]):
             self.matrix[-i] = self.matrix[-(i-1)]
     
     def isEmpty(self):
@@ -97,7 +97,7 @@ class Quantum:
             self.countQ -= 1
         else:
             self.restart()
-            # lanzar interrupcion *timeOut*
+            instance_InterruptHandler().interrupt(InterruptHandler.TIME_OUT)
     
     def restart(self):
         self.countQ = self.quantum
