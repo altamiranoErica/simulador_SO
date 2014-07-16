@@ -1,7 +1,7 @@
 class CPU:
 
-    def __init__(self, memory):
-        self.memory = memory
+    def __init__(self, mManager):
+        self.memoryManager = mManager
         
     def addPcb(self, pcb):
         self.pcb = pcb    
@@ -9,8 +9,7 @@ class CPU:
     #def execute(self, instruction):
         
     def fetch(self):
-        memoryAddress = self.pcb.memoryAddress + self.pcb.pc
-        instruction = self.memory.read(memoryAddress)
+        instruction = self.memoryManager.read(pcb)
         pcb.incrementPc()
         self.execute(instruction)
         

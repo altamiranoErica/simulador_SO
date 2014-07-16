@@ -9,10 +9,10 @@ class InterruptHandler():
     
     _instance = None
     
-    def __init__(self, cpu, rQueue, memory, disk, ioQueue):
+    def __init__(self, cpu, rQueue, mManager, disk, ioQueue):
         self.cpu = cpu
         self.readyQueue = rQueue
-        self.memory = memory
+        self.memoryManager = mManager
         self.disk = disk
         self.ioQueue = ioQueue
         self.configuration = {}
@@ -32,10 +32,10 @@ class InterruptHandler():
         self.addConfiguration(InterruptHandler.END_IO, EndIOCommand())
         self.addConfiguration(InterruptHandler.KILL, KillCommand())
 
-def create_InterruptHandler(cpu, rQueue, memory, disk, ioQueue):
+def create_InterruptHandler(cpu, rQueue, mManager, disk, ioQueue):
     # Crea la instancia de InterruptHandler si esta aun no fue creada.
     if not InterruptHandler._instance:
-        InterruptHandler._instance = InterruptHandler(cpu, rQueue, memory, disk, ioQueue)
+        InterruptHandler._instance = InterruptHandler(cpu, rQueue, mManager, disk, ioQueue)
 
 def instance_InterruptHandler():
     '''Retorna la instancia unica de InterruptHandler.

@@ -1,15 +1,21 @@
 class Memory:
     
-    def __init__(self, size = 100):
-        self.memoryCells = []
+    def __init__(self, size = 15):
+        self.memoryCells = [None for i in range(size)]
         self.size = size
+        
+    def firstCell(self):
+        return 0
         
     def address(self, program):
         return self.memoryCells.index(program[0])
         
     def load(self, address, program):
-        for p, r in zip(range(program.sourceSize), program.source):
-            self.memoryCells.insert(address + p, r)
+        for p, r in zip(range(program.sourceSize()), program.source):
+            self.loadInstruction(address + p, r)
+    
+    def loadInstruction(self, address, instruction):
+        self.memoryCells[address] = instruction
     
     def unload(self, address, codeSize):
         for i in range(codeSize):
