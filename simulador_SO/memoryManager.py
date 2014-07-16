@@ -11,15 +11,15 @@ class ContiguousMemoryAllocation(MemoryManager):
     
     def __init__(self, memory, aStrategy):
         self.memory = memory
-        self.allocationList = {}
+        self.allocationList = []
         self.allocationStrategy = aStrategy
 
     def load(self, program):
         mAddress = self.getAddress(program.sourceSize())
         self.memory.load(mAddress, program)
         mPool = MemoryPool(mAddress, program.sourceSize())
-        self.allocationList[id(mPool)] = mPool
-        return id(mPool)
+        self.allocationList.append(mPool)
+        return mPool.poolId
         
     def getAddress(self, programSize):
         if len(self.allocationList) == 0:
@@ -28,16 +28,17 @@ class ContiguousMemoryAllocation(MemoryManager):
             return self.allocationStrategy.assignHole(programSize, self)
     
     def unload(self, mAddress):
-        self.allocationList.pop(mAddress)
+        mPool = [mp for mp in self.allocationList if mp.memoryAddress == mAddress][0]
+        self.allocationList.remove(mPool)
         #self.memory.unload(mAddress, codeSize)
         
     def read(self, pcb):
-        mAddress = self.allocationList[pcb.memoryAddress].memoryAddress
-        self.memory.read(mAddress + pcb.pc)
+        mPool = [mp for mp in self.allocationList if mp.poolId == pcb.memoryAddress][0]
+        return self.memory.read(mPool.memoryAddress + pcb.pc)
         
     def holeList(self):
         # hole = cantidad de celdas libres.
-        orderedList = self.allocationList.values()
+        orderedList = self.allocationList
         orderedList.sort(key=lambda mp: mp.memoryAddress)
         holes = {}
         if orderedList[0].memoryAddress > 0:
@@ -52,7 +53,7 @@ class ContiguousMemoryAllocation(MemoryManager):
         return holes
         
     def compact(self):
-        mPools = self.allocationList.values()
+        mPools = self.allocationList
         mPools.sort(key=lambda mp: mp.memoryAddress)
         for p, r in zip(mPools[:len(mPools)-1], mPools[1:]):
             newAddress = p.memoryAddress + p.size
@@ -65,6 +66,7 @@ class ContiguousMemoryAllocation(MemoryManager):
 class MemoryPool:
     
     def __init__(self, mAddress, sourceSize):
+        self.poolId = id(self)
         self.memoryAddress = mAddress
         self.size = sourceSize
     
