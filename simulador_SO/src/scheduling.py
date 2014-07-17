@@ -25,9 +25,10 @@ class ReadyQueue:
         
 class Priority:
     
-    def __init__(self, readyQueue, topPriority):
-        self.readyQueue = readyQueue
-        self.queueToMatrix()
+    def __init__(self, topPriority):
+        #self.readyQueue = readyQueue
+        #self.queueToMatrix()
+        self.matrix = [[] for i in range(topPriority)]
         self.topPriority = topPriority
         
     def queueToMatrix(self):
@@ -40,8 +41,7 @@ class Priority:
         
     def addPCB(self, pcb):
         self.matrix[-pcb.priority].append(pcb)
-        self.readyQueue.addPCB(pcb)
-            # informacion duplicada.
+        #self.readyQueue.addPCB(pcb)
     
     def nextPCB(self):
         nextPcb = self.searchNext(self.topPriority)
@@ -50,10 +50,10 @@ class Priority:
         
     def searchNext(self, priority):
         if len(self.matrix[-priority]) == 0:
-            pcb = searchNext(priority - 1)
+            pcb = self.searchNext(priority - 1)
         else:
             pcb = self.matrix[-priority].pop(0)
-            self.readyQueue.removePCB(pcb)
+            #self.readyQueue.removePCB(pcb)
         return pcb
     
     def agePCBs(self):

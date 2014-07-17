@@ -1,6 +1,12 @@
 # kernel test
 
-from src.kernel import Kernel
+from src.kernel import *
+from src.memory import *
+from src.program import *
+from src.memoryManager import *
+from src.allocationStrategy import *
+from src.instruction import *
+from src.scheduling import *
 
 def main():
 	mm = ContiguousMemoryAllocation(Memory(), BestFit())

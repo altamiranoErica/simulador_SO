@@ -63,7 +63,6 @@ class Paging(memoryManager.MemoryManager):
         backUp = BackUpFrame(frame, self.memoryF.getSourceFrame(frame))
         linkedCell = filter(lambda pCell: pCell.frameNumber == frame.number, self.pagesTable)[0]
         idBackUp = '%s - %s' %(linkedCell.idPcb, linkedCell.page.number)
-        print 'idBackUP: %s - %s' %(linkedCell.idPcb, linkedCell.page.number)
         self.disk.load(idBackUp, backUp)
         linkedCell.page.changeRead()
         

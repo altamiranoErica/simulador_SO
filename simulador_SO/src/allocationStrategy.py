@@ -8,7 +8,7 @@ class AllocationStrategy:
     def listOfMajorHolesTo(self, size, holeList):
         orderedHoles = holeList.items()
         orderedHoles.sort(key=lambda i: i[0])
-        return filter(lambda x: x[1] > size, orderedHoles)
+        return filter(lambda x: x[1] >= size, orderedHoles)
 
 class FirstFit(AllocationStrategy):
     def assignHole(self, programSize, mManager):
