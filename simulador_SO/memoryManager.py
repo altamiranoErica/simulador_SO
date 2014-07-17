@@ -1,9 +1,15 @@
 class MemoryManager:
     
-    def load(self, program):
+    def load(self, program, idPcb):
         raise NotImplementedError
         
     def read(self, pcb):
+        raise NotImplementedError
+        
+    def unload(self, idPcb):
+        raise NotImplementedError
+        
+    def verifyMemorySpace(self, size):
         raise NotImplementedError
 
 
@@ -13,13 +19,19 @@ class ContiguousMemoryAllocation(MemoryManager):
         self.memory = memory
         self.allocationList = []
         self.allocationStrategy = aStrategy
-
-    def load(self, program):
+        
+    def verifyMemorySpace(self, size):
+        holes = filter(lambda t: t[1] >= size, self.holeList().items())
+        if len(holes) > 0:
+            return True
+        self.compact()
+        return self.holeList()[0][1] >= size
+            
+    def load(self, program, idPcb):
         mAddress = self.getAddress(program.sourceSize())
         self.memory.load(mAddress, program)
-        mPool = MemoryPool(mAddress, program.sourceSize())
+        mPool = MemoryPool(idPcb, mAddress, program.sourceSize())
         self.allocationList.append(mPool)
-        return mPool.poolId
         
     def getAddress(self, programSize):
         if len(self.allocationList) == 0:
@@ -27,13 +39,12 @@ class ContiguousMemoryAllocation(MemoryManager):
         else:
             return self.allocationStrategy.assignHole(programSize, self)
     
-    def unload(self, mAddress):
-        mPool = [mp for mp in self.allocationList if mp.memoryAddress == mAddress][0]
+    def unload(self, idPcb):
+        mPool = [mp for mp in self.allocationList if mp.idPcb == idPcb][0]
         self.allocationList.remove(mPool)
-        #self.memory.unload(mAddress, codeSize)
         
     def read(self, pcb):
-        mPool = [mp for mp in self.allocationList if mp.poolId == pcb.memoryAddress][0]
+        mPool = [mp for mp in self.allocationList if mp.idPcb == pcb.pid][0]
         return self.memory.read(mPool.memoryAddress + pcb.pc)
         
     def holeList(self):
@@ -65,13 +76,7 @@ class ContiguousMemoryAllocation(MemoryManager):
 
 class MemoryPool:
     
-    def __init__(self, mAddress, sourceSize):
-        self.poolId = id(self)
+    def __init__(self, idPcb, mAddress, sourceSize):
+        self.idPcb = idPcb
         self.memoryAddress = mAddress
         self.size = sourceSize
-    
-'''class Pagination(MemoryManager):
-    
-    def load(self, program):
-    
-    def read(self, pcb):'''

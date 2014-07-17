@@ -1,10 +1,10 @@
 class  PCB:
 
-    def __init__(self, pid, mAddress, priority):
+    def __init__(self, pid, priority, pSize):
         self.pid = pid
-        self.memoryAddress = mAddress
         self.priority = priority
+        self.programSize = pSize
         self.pc = 0
 
     def incrementPc(self):
-        self.pc = self.pc + 1
+        self.pc += 1

@@ -26,6 +26,5 @@ class WorstFit(AllocationStrategy):
     def assignHole(self, programSize, mManager):
         holes = mManager.holeList().items()
         holes.sort(key=lambda i: i[1])
-        holes.reverse()
-        return holes[0][0]
+        return holes[len(holes)-1][0]
         

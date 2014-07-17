@@ -13,3 +13,6 @@ class Disk:
         
     def delete(self, name):
         self.storage.pop(name)
+        
+    def containsName(self, name):
+        return name in self.storage.keys()

@@ -29,8 +29,9 @@ class NewCommand(InterruptCommand):
     
     def executeCommand(self, iHandler):
         program = iHandler.disk.read(self.programName)
-        mmAddress = iHandler.memoryManager.load(program)
-        newPcb = PCB(id(program), mmAddress, program.priority)
+        idPcb = id(program)
+        iHandler.memoryManager.load(program, idPcb)
+        newPcb = PCB(idPcb, program.priority, program.sourceSize())
         self.addPCBtoReadyQueue(newPcb)
 
 
@@ -52,14 +53,14 @@ class WaitIOCommand(InterruptCommand):
 class EndIOCommand(InterruptCommand):
     
     def executeCommand(self, iHandler):
-        pcb = iHandler.ioQueue.removeFinishedPcb()
-        self.addPCBtoReadyQueue(pcb)
+        pcbs = iHandler.ioQueue.removeFinishedPcbs()
+        for pcb in pcbs:
+            self.addPCBtoReadyQueue(pcb)
 
 
 class KillCommand(InterruptCommand):
     
     def executeCommand(self, iHandler):
         pcb = self.cpu.takePcb()
-        iHandler.memoryManager.unload(pcb.memoryAddress)
+        iHandler.memoryManager.unload(pcb.pid)
         self.addNewPCBToCPU()
-        # LIBERAR RECURSOS!! -> memoria y disco (paginacion)

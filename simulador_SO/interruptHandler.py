@@ -41,5 +41,5 @@ def instance_InterruptHandler():
     '''Retorna la instancia unica de InterruptHandler.
        Condicion: Haber creado primero la instancia.'''
     if not InterruptHandler._instance:
-        raise RuntimeError, 'Es necesario crear el Handler de interrupción para poder utilizarlo!'
+        raise RuntimeError, 'Es necesario crear el Handler de interrupcion para poder utilizarlo'
     return InterruptHandler._instance

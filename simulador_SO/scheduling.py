@@ -87,17 +87,20 @@ class RoundRobin:
     
 class Quantum:
 	
-    def __init__(self, quantum, clock):
+    def __init__(self, quantum, clock, cpu):
         self.quantum = quantum
-        self.countQ = quantum
+        self.counterQ = quantum
+        self.cpu = cpu
+        self.clock.removeObserver(cpu)
         self.clock.addObserver(self)
     
     def notify(self):
-        if self.countQ > 0:
-            self.countQ -= 1
+        if self.counterQ > 0:
+            self.counterQ -= 1
+            self.cpu.fetch()
         else:
             self.restart()
             instance_InterruptHandler().interrupt(InterruptHandler.TIME_OUT)
     
     def restart(self):
-        self.countQ = self.quantum
+        self.counterQ = self.quantum
