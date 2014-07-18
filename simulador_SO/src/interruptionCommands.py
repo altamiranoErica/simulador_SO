@@ -17,14 +17,11 @@ class InterruptCommand:
         raise NotImplementedError
         
     def addPCBtoReadyQueue(self, pcb):
-        if self.rQueue.isEmpty():
-            self.cpu.addPcb(pcb)
-        else:
-            self.rQueue.addPCB(pcb)
+        self.rQueue.addPCB(pcb)
             
-    def addNewPCBToCPU(self):
+    def addNewPCBToCPU(self, iHandler):
         if not self.rQueue.isEmpty():
-            self.cpu.add(iHandler.queue.nextPCB())
+            self.cpu.addPcb(iHandler.readyQueue.nextPCB())
 
     
 class NewCommand(InterruptCommand):
@@ -43,6 +40,8 @@ class NewCommand(InterruptCommand):
             iHandler.memoryManager.load(program, idPcb)
             newPcb = PCB(idPcb, program.priority, program.sourceSize())
             self.addPCBtoReadyQueue(newPcb)
+            if not self.cpu.containsPcb():
+                self.addNewPCBToCPU(iHandler)
         else:
             print '[interrupt] program wait: %s...' %(program.name)
             iHandler.lScheduler.addToWaitQueue(program)
@@ -56,8 +55,11 @@ class TimeOutCommand(InterruptCommand):
     def executeCommand(self, iHandler):
         print '[interrupt] time out...'
         pcb = self.cpu.takePcb()
-        self.addPCBtoReadyQueue(pcb)
-        
+        if pcb is not None:
+            self.addPCBtoReadyQueue(pcb)
+            ''' para evitar que se rompa si la ultima instruccion ejecutada
+            antes del time out es de IO.'''
+        self.addNewPCBToCPU(iHandler)
         
 class WaitIOCommand(InterruptCommand):
     
@@ -68,7 +70,7 @@ class WaitIOCommand(InterruptCommand):
         print '[interrupt] wait io...'
         pcb = self.cpu.takePcb()
         iHandler.ioQueue.addPCB(pcb)
-        self.addNewPCBToCPU()
+        self.addNewPCBToCPU(iHandler)
 
 
 class EndIOCommand(InterruptCommand):
@@ -81,6 +83,8 @@ class EndIOCommand(InterruptCommand):
         pcbs = iHandler.ioQueue.removeFinishedPcbs()
         for pcb in pcbs:
             self.addPCBtoReadyQueue(pcb)
+        if not self.cpu.containsPcb():
+            self.addNewPCBToCPU(iHandler)
 
 
 class KillCommand(InterruptCommand):

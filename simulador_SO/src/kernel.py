@@ -5,6 +5,7 @@ from cpu import *
 from clock import *
 from disk import *
 from ioQueue import *
+from src.scheduling import *
 
 
 class Kernel(Thread):
@@ -40,3 +41,29 @@ class Kernel(Thread):
         instance_InterruptHandler().addNewProgramToLoad(nameProgram)
         instance_InterruptHandler().interrupt(InterruptHandler.NEW)
         self.lock.release()
+        
+class FactoryKernel:
+    
+    def newKernelWith(self, mManager, readyQueue):
+        kernel = Kernel(mManager)
+        kernel.shortScheduler = readyQueue
+        return kernel
+        
+    def newKernelWithFIFO(self, mManager):
+        return self.newKernelWith(mManager, ReadyQueue())
+
+    def newKernelWithPriority(self, mManager):
+        return self.newKernelWith(mManager, Priority())
+    
+    def newKernelWithRoundRobin(self, mManager, quantum, readyQueue):
+        kernel = Kernel(mManager, readyQueue)
+        rr = RoundRobin(readyQueue, quantum, kernel.clock, kernel.cpu)
+        kernel.shortScheduler = rr
+        instance_InterruptHandler().readyQueue = rr
+        return kernel
+    
+    def newKernelWithRoundRobinFifo(self, mManager, quantum):
+        return self.newKernelWithRoundRobin(mManager, quantum, ReadyQueue())
+        
+    def newKernelWithRoundRobinPriority(self, mManager, quantum):
+        return self.newKernelWithRoundRobin(mManager, quantum, Priority())

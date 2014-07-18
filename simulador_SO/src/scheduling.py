@@ -83,6 +83,7 @@ class RoundRobin:
         self.queue.addPCB(pcb)
     
     def nextPCB(self):
+        self.timer.restart()
         return self.queue.nextPCB()
     
     def isEmpty(self):
@@ -102,8 +103,8 @@ class Quantum:
             self.counterQ -= 1
             self.cpu.notify()
         else:
-            self.restart()
-            instance_InterruptHandler().interrupt(InterruptHandler.TIME_OUT)
+            if self.cpu.containsPcb():
+                instance_InterruptHandler().interrupt(InterruptHandler.TIME_OUT)
     
     def restart(self):
         self.counterQ = self.quantum

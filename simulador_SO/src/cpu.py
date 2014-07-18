@@ -19,7 +19,7 @@ class CPU:
             instance_InterruptHandler().interrupt(InterruptHandler.KILL)
         elif instruction.iType == Instruction.CPU:
             print '[cpu] running instruction... '
-            print instruction.command()
+            instruction.execute()
         elif instruction.iType == Instruction.IO:
             print '[cpu] waiting IO...'
             instance_InterruptHandler().interrupt(InterruptHandler.WAIT_IO)
@@ -39,7 +39,9 @@ class CPU:
             self.fetch()
         
     def takePcb(self):
-        print '[cpu] take current pcb: %s... ' %(self.pcb.pid)
         currentPcb = self.pcb
         self.pcb = None
         return currentPcb
+    
+    def containsPcb(self):
+        return self.pcb is not None
